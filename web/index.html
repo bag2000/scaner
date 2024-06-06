@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Подключение Bootstrap через CDN</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <ul class="nav">
+    <li class="nav-item">
+      <button style="margin-top:5px;" class="nav-link btn" onclick="redirect_to_main_page()">Главная</button>
+    </li>
+    <li class="nav-item">
+      <button style="margin-top:5px;" class="nav-link btn" onclick="showModal_add(this)">Добавить IP</button>
+    </li>
+    <!-- <li class="nav-item">
+      <button style="margin-top:5px;" class="nav-link btn" onclick="scan_all()">Сканировать все</button>
+    </li> -->
+  </ul>
+  <table class="table table-hover table-sm" id="myTable">
+    <thead>
+      <tr>
+        <th scope="col">Название</th>
+        <th scope="col">IP</th>
+        <th scope="col">Открытые порты</th>
+        <th scope="col">Разрешенные порты</th>
+        <th scope="col">Дата скана</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-ips">
+    </tbody>
+  </table>
+  <!-- Модальное окно add -->
+  <form action="" id="client.frm.add">
+    <div id="add_modal" class="modal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="container-fluid">
+              <form action="" id="client.frm">
+                <div class="mb-3">
+                  <label for="modal-add-name" class="form-label">Название</label>
+                  <input class="form-control" id="modal-add-name">
+                </div>
+                <div class="mb-3">
+                  <label for="modal-add-ip" class="form-label">IP адрес</label>
+                  <input class="form-control" id="modal-add-ip"></input>
+                </div>
+                <div class="mb-3">
+                  <label for="modal-add-allow-ports" class="form-label">Разрешенные порты</label>
+                  <textarea class="form-control" id="modal-add-allow-ports">0</textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="modal-add-comments" class="form-label">Информация</label>
+                  <textarea class="form-control" id="modal-add-comments"></textarea>
+                </div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-success" name="modal-add-btn-save" id="modal-add-btn-save"
+                  disabled>Сохранить</button>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Модальное окно change -->
+  <form action="" id="client.frm.change">
+    <div id="change_modal" class="modal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="container-fluid">
+              <form action="" id="client.frm">
+                <div class="mb-3">
+                  <label for="modal-change-name" class="form-label" style="height: 10px">Название</label>
+                  <input class="form-control" id="modal-change-name" style="height: 35px">
+                </div>
+                <div class="mb-3">
+                  <label for="modal-change-ip" class="form-label" style="height: 10px">IP адрес</label>
+                  <input class="form-control" id="modal-change-ip" style="height: 35px"></input>
+                </div>
+                <div class="mb-3">
+                  <label for="modal-change-open-ports" class="form-label" style="height: 10px">Открытые порты</label>
+                  <textarea class="form-control" rows=1 id="modal-change-open-ports" readonly></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="modal-change-allow-ports" class="form-label" style="height: 10px">Разрешенные
+                    порты</label>
+                  <textarea class="form-control" rows=1 id="modal-change-allow-ports"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="modal-change-comments" class="form-label" style="height: 10px">Информация</label>
+                  <textarea class="form-control" rows=3 id="modal-change-comments"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="modal-change-date" class="form-label" style="height: 10px">Дата сканирования</label>
+                  <input class="form-control" id="modal-change-date" readonly style="height: 35px"></input>
+                </div>
+                <div class="mb-3">
+                  <label for="modal-change-log" class="form-label" style="height: 10px">Лог</label>
+                  <textarea class="form-control" rows=10 id="modal-change-log"></textarea>
+                </div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-success" name="modal-change-btn-scan" id="modal-change-btn-scan"
+                  disabled>Сканировать</button>
+                <button type="button" class="btn btn-info" name="modal-change-btn-save" id="modal-change-btn-save"
+                  disabled>Сохранить</button>
+                <button type="button" class="btn btn-danger" name="modal-change-btn-delete"
+                  id="modal-change-btn-delete">Удалить</button>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</body>
+
+</html>
+
+<script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+  </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+
+  function ip_to_int(ip) {
+    ip = ip.split('.')
+    ip = ip.join('')
+    ip = Number(ip)
+
+    return ip
+  }
+
+  function get_all_ips_from_db() {
+    return $.ajax({
+      url: "http://127.0.0.1:8000/api/ips",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      success: function (response) {
+        response;
+      }
+    })
+  }
+
+  function get_ip_from_db(ip) {
+    return $.ajax({
+      url: "http://127.0.0.1:8000/api/ips/" + ip,
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      success: function (response) {
+        response;
+      }
+    })
+  }
+
+  function create_table(ip) {
+
+    let status = ""
+    if (ip[7] === "red") {
+      status = "table-danger"
+    }
+
+    if (ip[7] === "green") {
+      status = "table-success"
+    }
+
+    if (ip[7] === "white") {
+      status = "table-light"
+    }
+
+    const id_tr = 'item_ip_id-' + ip[0]
+    $('#tbody-ips').append(`<tr onclick="showModal_patch(this)" id=${id_tr} class=${status} style="height: 10px"></tr>`);
+    $(`#${id_tr}`).append(`<td id=${id_tr}-name>${ip[1]}</td>`);
+    $(`#${id_tr}`).append(`<td id=${id_tr}-ip>${ip[2]}</td>`);
+    $(`#${id_tr}`).append(`<td id=${id_tr}-open>${ip[3]}</td>`);
+    $(`#${id_tr}`).append(`<td id=${id_tr}-allow>${ip[4]}</td>`);
+    $(`#${id_tr}`).append(`<td style="width: 150px;">${ip[9]}</td>`);
+  }
+
+  function sort_ips_by_ips(ips) {
+    let sorted_ips_arr = []
+    $.when(ips).done(function (res) {
+
+      ip_arr = []
+      res.forEach((element) => {
+        ip_arr.push(ip_to_int(element[2]))
+      })
+
+      ip_arr = ip_arr.sort(function (a, b) { return a - b })
+      ip_arr.forEach((el_ip_arr) => {
+        res.forEach((el_res) => {
+          if (el_ip_arr === ip_to_int(el_res[2])) {
+            create_table(el_res)
+            sorted_ips_arr.push(el_res)
+          }
+        })
+      })
+    })
+
+    return sorted_ips_arr
+  }
+
+  function is_digit(digit) {
+
+    if (digit === '0' || Number(digit)) {
+      return true
+    } else {
+      return false
+    }
+
+  }
+
+  function is_ip(ip) {
+    ip = ip.split(".")
+    if (ip.length === 4) {
+
+      if (is_digit(ip[0])) {
+        okted_1 = Number(ip[0])
+      } else {
+        okted_1 = "none"
+      }
+
+      if (is_digit(ip[1])) {
+        okted_2 = Number(ip[1])
+      } else {
+        okted_2 = "none"
+      }
+
+      if (is_digit(ip[2])) {
+        okted_3 = Number(ip[2])
+      } else {
+        okted_3 = "none"
+      }
+
+      if (is_digit(ip[3])) {
+        okted_4 = Number(ip[3])
+      } else {
+        okted_4 = "none"
+      }
+
+      if ((okted_1 >= 0 && okted_1 <= 255 && okted_1 != "none") && (okted_2 >= 0 && okted_2 <= 255 && okted_2 != "none") && (okted_3 >= 0 && okted_3 <= 255 && okted_3 != "none") && (okted_4 >= 0 && okted_4 < 255 && okted_4 != "none")) {
+        return true
+      } else {
+        return false
+      }
+    }
+  }
+
+  function is_ports(ports) {
+
+    is_port = false
+    ports_list = ports.split(',')
+    for (port of ports_list) {
+      port = Number(port.trim())
+      if (is_digit(port) || port === 0) {
+        if (port >= 0 && port <= 65535) {
+          is_port = true
+        } else {
+          is_port = false
+          break
+        }
+      } else {
+        is_port = false
+        break
+      }
+    }
+    return is_port
+  }
+
+  function post_ip(name, ip_address, allow_ports, comments) {
+    $.ajax({
+      type: 'POST',
+      mode: 'no-cors',
+      url: "http://127.0.0.1:8000/api/ips",
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ name: name, ip_address: ip_address, open_ports: "", allow_ports: allow_ports, comments: comments, logs: "", status: "white", enabled: true, date: "" }),
+      success: function (result) {
+
+      },
+      error: function (err) {
+
+      }
+    })
+  }
+
+  function put_ip(name, ip_address, open_ports, allow_ports, comments, log, date) {
+    $.ajax({
+      type: 'PUT',
+      url: "http://127.0.0.1:8000/api/ips/" + ip_address,
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ name: name, ip_address: ip_address, open_ports: open_ports, allow_ports: allow_ports, comments: comments, logs: log, status: "white", enabled: true, date: date }),
+      success: function (result) {
+
+      },
+      error: function (err) {
+
+      }
+    })
+  }
+
+  function delete_ip(ip) {
+    $.ajax({
+      type: 'DELETE',
+      mode: 'no-cors',
+      url: "http://127.0.0.1:8000/api/ips/" + ip,
+      contentType: "application/json; charset=utf-8",
+      success: function (result) {
+        // when call is sucessfull
+      },
+      error: function (err) {
+        // check the err for error details
+      }
+    })
+  }
+
+  function scan_all() {
+    result = $.ajax({
+      url: "http://127.0.0.1:8000/api/scan/all",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      success: function (response) {
+        response;
+      }
+    })
+  }
+
+  ips = get_all_ips_from_db()
+  sorted_ips = sort_ips_by_ips(ips)
+  modal_valid_ports = true
+  modal_valid_ip = true
+
+  // Модальное окно add
+  const add_modal = new bootstrap.Modal(document.getElementById('add_modal'));
+  function showModal_add(el) {
+    modal_valid_ports = true
+    modal_valid_ip = false
+    document.getElementById("client.frm.add").reset();
+    $("#modal-add-btn-save").prop("disabled", true);
+    add_modal.show();
+  }
+  // Кнопка сохранить в модальном окне add
+  $('#add_modal').on('click', '[name=modal-add-btn-save]', function () {
+    name = $("#modal-add-name").val()
+    ip = $("#modal-add-ip").val()
+    allow_ports = $("#modal-add-allow-ports").val()
+    comments = $("#modal-add-comments").val()
+
+    post = post_ip(name, ip, allow_ports, comments)
+    $.when(post).done(function () {
+      test = get_ip_from_db(ip)
+      $.when(test).done(function (res) {
+        if (res != null) {
+          document.getElementById("client.frm.add").reset();
+          window.location.reload();
+        }
+      })
+    })
+  })
+  // Проверяем на валидность ip в окне add
+  $("#modal-add-ip").keyup(function () {
+    if (modal_valid_ports) {
+      if (is_ip($("#modal-add-ip").val())) {
+        $("#modal-add-btn-save").prop("disabled", false);
+        modal_valid_ip = true
+      } else {
+        $("#modal-add-btn-save").prop("disabled", true);
+        modal_valid_ip = false
+      }
+    }
+  });
+  // Проверяем на валидность ports в окне add
+  $("#modal-add-allow-ports").keyup(function () {
+    allow_ports = $("#modal-add-allow-ports").val()
+    if (modal_valid_ip) {
+      p = $("#modal-add-allow-ports").val()
+      p_splited = p.split(",")
+      if (is_ports(p) && p != "" && p_splited[p_splited.length - 1].trim() != "") {
+        console.log("ok");
+        $("#modal-add-btn-save").prop("disabled", false);
+        modal_valid_ports = true
+      } else {
+        console.log("no ok");
+        $("#modal-add-btn-save").prop("disabled", true);
+        modal_valid_ports = false
+      }
+    }
+  })
+
+
+  // Модальное окно change
+  const change_modal = new bootstrap.Modal(document.getElementById('change_modal'));
+  function showModal_patch(el) {
+    document.getElementById("client.frm.change").reset();
+
+    id_ip = el.id + "-ip"
+    ip_for_patch = $(`#${id_ip}`)[0].textContent
+
+    ip = get_ip_from_db(ip_for_patch)
+    $.when(ip).done(function (res) {
+      db_name = res[1]
+      db_ip = res[2]
+      db_open_ports = res[3]
+      db_allow_ports = res[4]
+      db_comments = res[5]
+      db_log = res[6]
+      db_status = res[7]
+      db_enabled = res[8]
+      db_date = res[9]
+
+      $("#modal-change-ip").val(db_ip)
+      $("#modal-change-name").val(db_name)
+      $("#modal-change-open-ports").val(db_open_ports)
+      $("#modal-change-allow-ports").val(db_allow_ports)
+      $("#modal-change-comments").val(db_comments)
+      $("#modal-change-date").val(db_date)
+      $("#modal-change-log").val(db_log)
+    })
+
+    $("#modal-change-btn-scan").prop("disabled", false);
+    $("#modal-change-btn-save").prop("disabled", false);
+    change_modal.show();
+  }
+  // Кнопка сохранить в модальном окне change
+  $('#change_modal').on('click', '[name="modal-change-btn-save"]', function () {
+    ip = $("#modal-change-ip").val()
+    name = $("#modal-change-name").val()
+    open_ports = $("#modal-change-open-ports").val()
+    allow_ports = $("#modal-change-allow-ports").val()
+    comments = $("#modal-change-comments").val()
+    date = $("#modal-change-date").val()
+    log = $("#modal-change-log").val()
+    put = put_ip(name, ip, open_ports, allow_ports, comments, log, date)
+    $.when(put).done(function () {
+      document.getElementById("client.frm.change").reset();
+      change_modal.hide();
+      window.location.reload();
+    })
+  })
+  // Проверяем на валидность ip в окне change
+  $("#modal-change-ip").keyup(function () {
+    if (modal_valid_ports) {
+      if (is_ip($("#modal-change-ip").val())) {
+        $("#modal-change-btn-save").prop("disabled", false);
+        $("#modal-change-btn-scan").prop("disabled", false);
+        modal_valid_ip = true
+      } else {
+        $("#modal-change-btn-save").prop("disabled", true);
+        $("#modal-change-btn-scan").prop("disabled", true);
+        modal_valid_ip = false
+      }
+    }
+  });
+  // Проверяем на валидность ports в окне add
+  $("#modal-change-allow-ports").keyup(function () {
+    allow_ports = $("#modal-change-allow-ports").val()
+    if (modal_valid_ip) {
+      p = $("#modal-change-allow-ports").val()
+      p_splited = p.split(",")
+      if (is_ports(p) && p != "" && p_splited[p_splited.length - 1].trim() != "") {
+        $("#modal-change-btn-save").prop("disabled", false);
+        $("#modal-change-btn-scan").prop("disabled", false);
+        modal_valid_ports = true
+      } else {
+        $("#modal-change-btn-save").prop("disabled", true);
+        $("#modal-change-btn-scan").prop("disabled", true);
+        modal_valid_ports = false
+      }
+    } else {
+      $("#modal-change-btn-save").prop("disabled", true);
+      $("#modal-change-btn-scan").prop("disabled", true);
+      modal_valid_ports = false
+    }
+  })
+  // Кнопка удалить в модальном окне change
+  $('#change_modal').on('click', '[name="modal-change-btn-delete"]', function () {
+    ip = $("#modal-change-ip").val()
+    del = delete_ip(ip)
+    $.when(del).done(function () {
+      document.getElementById("client.frm.add").reset();
+      document.getElementById("client.frm.change").reset();
+      change_modal.hide();
+      window.location.reload(true);
+    })
+  })
+  // Кнопка сканировать в модальном окне change
+  $('#change_modal').on('click', '[name="modal-change-btn-scan"]', function () {
+    ip = $("#modal-change-ip").val()
+    name = $("#modal-change-name").val()
+    open_ports = $("#modal-change-open-ports").val()
+    allow_ports = $("#modal-change-allow-ports").val()
+    comments = $("#modal-change-comments").val()
+    date = $("#modal-change-date").val()
+    log = $("#modal-change-log").val()
+    put = put_ip(name, ip, open_ports, allow_ports, comments, log, date)
+    $.when(put).done(function () {
+      scan = get_ip_from_db(ip)
+      $.when(scan).done(function () {
+        result = $.ajax({
+          url: "http://127.0.0.1:8000/api/scan/" + ip,
+          headers: { "Accept": "application/json", "Content-Type": "application/json" },
+          success: function (response) {
+            response;
+          }
+        })
+        $.when(result).done(function () {
+          document.getElementById("client.frm.change").reset();
+          change_modal.hide();
+          window.location.reload();
+        })
+      })
+    })
+  })
+
+  setInterval(function () {
+    $('#tbody-ips').remove();
+    $('#myTable').append('<tbody id="tbody-ips">')
+    ips = get_all_ips_from_db()
+    sorted_ips = sort_ips_by_ips(ips)
+  }, 60000);
+
+  function redirect_to_main_page() {
+    main_page_address = $.ajax({
+      url: "http://127.0.0.1:8000/api/settings/main_page_address",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      success: function (response) {
+        response;
+      }
+    })
+
+    $.when(main_page_address).done(function (res) {
+      address = res["main_page_address"]
+      window.location.replace(address);
+    })
+
+  }
+</script>
