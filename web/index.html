@@ -133,6 +133,8 @@
 
 <script>
 
+const ip_host = location.host;
+
   function ip_to_int(ip) {
     ip = ip.split('.')
     ip = ip.join('')
@@ -143,7 +145,7 @@
 
   function get_all_ips_from_db() {
     return $.ajax({
-      url: "http://127.0.0.1:8000/api/ips",
+      url: `http://${ip_host}:8000/api/ips`,
       headers: { "Accept": "application/json", "Content-Type": "application/json" },
       success: function (response) {
         response;
@@ -153,7 +155,7 @@
 
   function get_ip_from_db(ip) {
     return $.ajax({
-      url: "http://127.0.0.1:8000/api/ips/" + ip,
+      url: `http://${ip_host}:8000/api/ips/` + ip,
       headers: { "Accept": "application/json", "Content-Type": "application/json" },
       success: function (response) {
         response;
@@ -279,7 +281,7 @@
     $.ajax({
       type: 'POST',
       mode: 'no-cors',
-      url: "http://127.0.0.1:8000/api/ips",
+      url: `http://${ip_host}:8000/api/ips`,
       dataType: "json",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ name: name, ip_address: ip_address, open_ports: "", allow_ports: allow_ports, comments: comments, logs: "", status: "white", enabled: true, date: "" }),
@@ -295,7 +297,7 @@
   function put_ip(name, ip_address, open_ports, allow_ports, comments, log, date) {
     $.ajax({
       type: 'PUT',
-      url: "http://127.0.0.1:8000/api/ips/" + ip_address,
+      url: `http://${ip_host}:8000/api/ips/` + ip_address,
       dataType: "json",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ name: name, ip_address: ip_address, open_ports: open_ports, allow_ports: allow_ports, comments: comments, logs: log, status: "white", enabled: true, date: date }),
@@ -312,7 +314,7 @@
     $.ajax({
       type: 'DELETE',
       mode: 'no-cors',
-      url: "http://127.0.0.1:8000/api/ips/" + ip,
+      url: `http://${ip_host}:8000/api/ips/` + ip,
       contentType: "application/json; charset=utf-8",
       success: function (result) {
         // when call is sucessfull
@@ -325,7 +327,7 @@
 
   function scan_all() {
     result = $.ajax({
-      url: "http://127.0.0.1:8000/api/scan/all",
+      url: `http://${ip_host}:8000/api/scan/all`,
       headers: { "Accept": "application/json", "Content-Type": "application/json" },
       success: function (response) {
         response;
@@ -505,7 +507,7 @@
       scan = get_ip_from_db(ip)
       $.when(scan).done(function () {
         result = $.ajax({
-          url: "http://127.0.0.1:8000/api/scan/" + ip,
+          url: `http://${ip_host}:8000/api/scan/` + ip,
           headers: { "Accept": "application/json", "Content-Type": "application/json" },
           success: function (response) {
             response;
@@ -529,7 +531,7 @@
 
   function redirect_to_main_page() {
     main_page_address = $.ajax({
-      url: "http://127.0.0.1:8000/api/settings/main_page_address",
+      url: `http://${ip_host}:8000/api/settings/main_page_address`,
       headers: { "Accept": "application/json", "Content-Type": "application/json" },
       success: function (response) {
         response;
