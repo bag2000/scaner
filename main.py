@@ -49,7 +49,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 def run_cmd(cmd):
     process = subprocess.run(cmd, capture_output=True, shell=True)
     ressult_ok = process.stdout.decode("utf-8")

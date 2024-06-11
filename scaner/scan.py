@@ -19,11 +19,11 @@ os.chdir(script_dir)
 config = configparser.ConfigParser()
 config.read("../settings/settings.ini")
 nmap_cmd = config["Nmap"]["nmap_cmd_scan_ip"].replace('"', '')
-
+base_ip = config["Main"]["server_ip_address"].replace('"', '')
 
 headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
 base_port = '8000'
-base_url = f'http://192.168.12.140:{base_port}'
+base_url = f'http://{base_ip}:{base_port}'
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--ip", help = "Scan ip. Arg. all or ip or subnet. Example: python3 scan.py -i all OR python3 scan.py -i 192.168.12.45 OR python3 scan.py -i 192.168.10.0")
